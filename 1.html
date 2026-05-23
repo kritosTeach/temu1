@@ -1,0 +1,33 @@
+# ============================================
+# XØWØRM-V99 ANTI-SCANNER PROTECTION
+# ============================================
+
+# Block common scanners
+SetEnvIfNoCase User-Agent "bot|crawl|spider|scraper|curl|wget|python|java|selenium|headless|phantom|puppeteer|playwright|cypress|webdriver|automation|mechanize|httpclient|okhttp|axios|node-fetch|go-http|perl|ruby|postman|insomnia|burp|nikto|nmap|sqlmap|dirb|gobuster|wfuzz|hydra|medusa|thc|aircrack|john|hashcat|metasploit|nessus|openvas|zap|acunetix|appscan|netsparker|w3af|arachni|vega|skipfish|ratproxy|fiddler|charles|mitmproxy" block_it
+
+Order Deny,Allow
+Deny from env=block_it
+
+# Block suspicious IP ranges (add your own)
+# Deny from 1.2.3.0/24
+
+# Prevent directory listing
+Options -Indexes
+
+# Hide PHP extension
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.*)$ $1.php [NC,L]
+
+# Security headers
+Header set X-Frame-Options "DENY"
+Header set X-Content-Type-Options "nosniff"
+Header set Referrer-Policy "no-referrer"
+Header set Cache-Control "no-cache, no-store, must-revalidate"
+
+# Block access to log files
+<FilesMatch "\.(log|txt|sql|bak|old)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
